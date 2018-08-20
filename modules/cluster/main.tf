@@ -1,4 +1,4 @@
-resource "google_compute_instance_template" "instance_template" {
+resource "google_compute_instance_template" "server_template" {
   count   = "${var.module_enabled ? 1 : 0}"
   project = "${var.project}"
 
@@ -6,7 +6,7 @@ resource "google_compute_instance_template" "instance_template" {
   machine_type = "${var.machine_type}"
   region       = "${var.region}"
 
-  tags = ["${concat(list("allow-ssh"))}"]
+  tags = "${var.tags}"
 
   # Boot Disk
   disk {
@@ -27,6 +27,13 @@ resource "google_compute_instance_template" "instance_template" {
     map("startup-script", "${var.startup_script}"),
     var.metadata
   )}"
+
+  service_account {
+    scopes = [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/compute.readonly",
+    ]
+  }
 }
 
 resource "google_compute_instance_group_manager" "default" {
@@ -37,7 +44,7 @@ resource "google_compute_instance_group_manager" "default" {
 
   base_instance_name = "${var.name}"
 
-  instance_template = "${google_compute_instance_template.instance_template.self_link}"
+  instance_template = "${google_compute_instance_template.server_template.self_link}"
 
   zone = "${var.zone}"
 

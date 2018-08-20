@@ -25,13 +25,15 @@ terraform {
 # # Nomad / Consul Servers
 
 module "servers" {
-  # Location of the server cluster module
+  # Location of the cluster module
   source = "./modules/cluster"
 
   # Image to be used for compute instances in the cluster
   source_image = "ubuntu-1804-bionic-v20180808"
 
-  # Script to run to start Nomad / Consul / Docker on compute instance boot
+  tags = ["consul-server", "nomad-server"]
+
+  # Script to run to start Nomad / Consul on compute instance boot
   startup_script = "${file("${path.module}/scripts/server-startup.sh")}"
 
   name = "servers"
@@ -40,16 +42,23 @@ module "servers" {
 }
 
 module "clients" {
-  # Location of the server cluster module
+  # Location of the cluster module
   source = "./modules/cluster"
 
   # Image to be used for compute instances in the cluster
   source_image = "ubuntu-1804-bionic-v20180808"
 
-  # Script to run to start Nomad / Consul / Docker on compute instance boot
+  tags = ["nomad-client"]
+
+  # Script to run to start Nomad / Consul on compute instance boot
   startup_script = "${file("${path.module}/scripts/client-startup.sh")}"
 
   name = "clients"
 
   size = 2
+}
+
+module "security" {
+  # Location of the security module
+  source = "./modules/security"
 }

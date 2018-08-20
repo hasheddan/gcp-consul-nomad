@@ -1,3 +1,4 @@
 # Ignore Unwanted Terraform Files
 *.terraform
 *.tfvars
+*tfstate*

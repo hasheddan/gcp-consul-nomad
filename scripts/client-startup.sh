@@ -21,10 +21,20 @@ sudo mv nomad /usr/bin/nomad
 sudo mkdir -p /etc/nomad.d
 sudo chmod a+w /etc/nomad.d
 
-cat <<EOF > /etc/nomad.d/client.hcl
+# Write Nomad Client Config gile
+sudo bash -c 'cat <<EOF > /etc/nomad.d/client.hcl
 datacenter = "dc1"
 data_dir   = "/etc/nomad.d"
+
 client {
   enabled = true
 }
-EOF
+EOF'
+
+# TODO: tag value only server?
+consul agent -data-dir=/tmp/consul \
+    -enable-script-checks=true -config-dir=/etc/consul.d \
+    -retry-join "provider=gce tag_value=consul-server" &
+
+
+nomad agent -config=/etc/nomad.d/client.hcl &

@@ -23,6 +23,11 @@ variable "source_image" {
   default     = "ubuntu-1804-bionic-v20180808"
 }
 
+variable "tags" {
+  description = "Tags associated with compute instance."
+  default     = []
+}
+
 variable "startup_script" {
   description = "Script to run to start Nomad / Consul / Docker on compute instance boot."
 }

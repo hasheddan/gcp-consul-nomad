@@ -21,10 +21,17 @@ sudo mv nomad /usr/bin/nomad
 sudo mkdir -p /etc/nomad.d
 sudo chmod a+w /etc/nomad.d
 
-cat <<EOF > /etc/nomad.d/server.hcl
+sudo bash -c 'cat <<EOF > /etc/nomad.d/server.hcl
 data_dir = "/etc/nomad.d"
 server {
   enabled          = true
-  bootstrap_expect = 1
+  bootstrap_expect = 3
 }
-EOF
+EOF'
+
+consul agent -server -bootstrap-expect=3 \
+    -data-dir=/tmp/consul \
+    -enable-script-checks=true -config-dir=/etc/consul.d \
+    -retry-join "provider=gce tag_value=consul-server" &
+
+nomad agent -config=/etc/nomad.d/server.hcl
