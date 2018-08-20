@@ -34,7 +34,7 @@ terraform apply -var 'gcp_project=my-gcp-project-name'
 Terraform will automatically load variables from any file named ```terraform.tfvars``` or ends in ```*.auto.tfvars```. The contents of this file in our case will consist of one line:
 
 ```
-gcp_project = "terraform-tests-211820"
+gcp_project = "my-gcp-project-name"
 ```
 
 ---
