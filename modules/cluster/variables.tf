@@ -1,5 +1,5 @@
 variable module_enabled {
-  description = ""
+  description = "Denotes whether a template should be generated or not."
   default     = true
 }
 
